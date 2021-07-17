@@ -16,6 +16,13 @@ def post_numbers():
     global NUMBERS
     NUMBERS = post_data.get("numbers")
 
+    for p in range(0, len(NUMBERS)):
+        if not isinstance(NUMBERS[p], int):
+            response_object = {
+                'Mensagem': "Existem valores inválidos!"
+            }
+            return jsonify(response_object)
+
     soma = 0
     for i in range(0,len(NUMBERS)):
         soma = soma + NUMBERS[i]
