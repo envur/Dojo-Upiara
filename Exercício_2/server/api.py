@@ -12,6 +12,7 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 def post_numbers():
     NUMBERSMED = []
     NUMBERS7 = []
+    media = 0
     post_data = request.get_json()
     global NUMBERS
     NUMBERS = post_data.get("numbers")
@@ -27,7 +28,8 @@ def post_numbers():
     for i in range(0,len(NUMBERS)):
         soma = soma + NUMBERS[i]
     
-    media = soma/len(NUMBERS)
+    if len(NUMBERS) > 0:
+        media = soma/len(NUMBERS)
 
     for j in range(0, len(NUMBERS)):
         if NUMBERS[j] > media:
@@ -40,13 +42,13 @@ def post_numbers():
 
             
     response_object = {
-    'Qtd. Números':len(NUMBERS),
-    'Ordem':NUMBERS, 
-    'Ordem Inversa':list(reversed(NUMBERS)),
-    'Soma dos Números':soma,
-    'Média dos Números':media,
-    'Valores Acima da Média':NUMBERSMED,
-    'Valores Abaixo de 7':NUMBERS7
+    'amount':len(NUMBERS),
+    'sequence':NUMBERS, 
+    'reversed':list(reversed(NUMBERS)),
+    'sum':soma,
+    'average':media,
+    'above_average':NUMBERSMED,
+    'bellow_seven':NUMBERS7
     }    
     return jsonify(response_object)
 
