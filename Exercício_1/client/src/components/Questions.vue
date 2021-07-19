@@ -10,7 +10,6 @@
         class="btn btn-success mt-4 btn-lg"
         v-on:click.stop.prevent = startQuest
         >Iniciar</button>
-        <h1>{{this.histAnswes}}</h1>
     </div>
     <transition name="fade">
     <div v-if="this.questStart && this.questFinish == false"

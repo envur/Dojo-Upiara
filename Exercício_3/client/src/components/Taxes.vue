@@ -4,19 +4,30 @@
         <h4>Insira o quanto você ganha por hora e quantas horas você trabalhou no mês.<br>
             Caso tenha inserido um valor errado, clique em limpar.<br>
             Quando terminar, clique em resultados.</h4>
-        <br><br>
+        <br>
+        <b-alert
+        :show="dismissCountDown"
+        dismissible
+        variant="danger"
+        @dismissed="dismissCountDown=0"
+        @dismiss-count-down="countDownChanged">
+        <p> {{ msg }} </p>
+        <b-progress
+          variant="danger"
+          :max="dismissSecs"
+          :value="dismissCountDown"
+          height="2px">
+        </b-progress>
+    </b-alert>
         <div>
           <input class="form-control form-control-md"
                  placeholder="Insira o quanto você ganha por hora"
-                 v-model.number="valueSalary"><br>
-          <button class="btn btn-primary btn-lg" @click="addSalary">Adicionar Salário</button>
+                 v-model.number="salary"><br>
         </div>
         <div>
           <br><input class="form-control form-control-md"
                  placeholder="Insira as horas trabalhadas"
-                 v-model.number="valueHours"><br>
-          <button class="btn btn-primary btn-lg"
-                  @click="addHours">Adicionar Horas Trabalhadas</button>
+                 v-model.number="workingHours"><br>
         </div>
         <div class="col-lg-12" style="text-align: center"><br><br><br><br>
           <button class="btn btn-success btn-lg" @click="sendValues">Resultados</button>
@@ -44,8 +55,6 @@ export default {
   name: 'Taxes',
   data() {
     return {
-      valueSalary: '',
-      valueHours: '',
       salary: '',
       workingHours: '',
       grossSalary: '',
@@ -53,24 +62,18 @@ export default {
       renda: '',
       sindicato: '',
       liquidSalary: '',
+      msg: '',
+      dismissSecs: 10,
+      dismissCountDown: 0,
     };
   },
   methods: {
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown;
+    },
     clearValues() {
       this.salary = null;
       this.workingHours = null;
-    },
-    addSalary() {
-      if (this.valueSalary > 0) {
-        this.salary = this.valueSalary;
-        this.valueSalary = null;
-      }
-    },
-    addHours() {
-      if (this.valueHours > 0) {
-        this.workingHours = this.valueHours;
-        this.valueHours = '';
-      }
     },
     sendValues() {
       const path = 'http://localhost:5000/taxes';
@@ -90,6 +93,10 @@ export default {
             this.salary = '';
             this.workingHours = '';
           });
+      }
+      if (this.salary === '' || this.workingHours === '') {
+        this.dismissCountDown = this.dismissSecs;
+        this.msg = 'Você não preencheu algum dos campos obrigatórios!';
       }
     },
   },
